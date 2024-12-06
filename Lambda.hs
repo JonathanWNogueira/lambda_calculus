@@ -1,5 +1,6 @@
 module Lambda where
 
+import Control.Monad.Writer ( Writer, runWriter, tell )
 import Data.List ((\\))
 
 data Term
@@ -17,3 +18,12 @@ freeVars :: Term -> [Char]
 freeVars (Var x) = [x] -- free variable
 freeVars (Abs x t) = freeVars t \\ [x] -- abstraction (remove x from t)
 freeVars (App t1 t2) = freeVars t1 ++ freeVars t2 -- aplication (merge t1 & t2)
+
+class (Show a, Eq a) => LTerm a where 
+  eval :: a -> Writer [a] a
+  evalStep :: a -> a
+
+  eval a = do
+    tell [a]  -- log
+    let b = evalStep a -- next state
+    if a == b then return a else eval b -- evaluate till a nothing changes
