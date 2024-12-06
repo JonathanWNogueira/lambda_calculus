@@ -3,9 +3,9 @@ module Lambda where
 import Data.List ((\\))
 
 data Term
-  = Var Char
-  | Abs Char Term
-  | App Term Term deriving (Eq)
+  = Var Char                    -- valor
+  | Abs Char Term               -- abstraction
+  | App Term Term deriving (Eq) -- aplication
 
 instance Show Term where
   show :: Term -> String
@@ -14,6 +14,6 @@ instance Show Term where
   show (App t1 t2) = "(" ++ show t1 ++ " " ++ show t2 ++ ")"
 
 freeVars :: Term -> [Char]
-freeVars (Var x) = [x]
-freeVars (Abs x t) = freeVars t \\ [x]
-freeVars (App t1 t2) = freeVars t1 ++ freeVars t2
+freeVars (Var x) = [x] -- free variable
+freeVars (Abs x t) = freeVars t \\ [x] -- abstraction (remove x from t)
+freeVars (App t1 t2) = freeVars t1 ++ freeVars t2 -- aplication (merge t1 & t2)
