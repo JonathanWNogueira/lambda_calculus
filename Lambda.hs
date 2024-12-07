@@ -1,7 +1,7 @@
 module Lambda where
 
 import Control.Monad.Writer ( Writer, runWriter, tell )
-import Data.List ((\\))
+import Data.List ( (\\) )
 
 data Term
   = Var Char                    -- value
