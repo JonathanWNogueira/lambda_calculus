@@ -12,8 +12,8 @@ interpret input = do
   let parsed = parserlamb $ lexer input -- syntax and lexical analysis
   let gamma = Lam.freeVars parsed       -- free vars from parsed
 
-  let h = snd $ runWriter $ eval $ removeNames parsed gamma
-  mapM_ (print . flip restoreNames gamma) h
+  let h = snd $ runWriter $ eval $ removeNames parsed gamma -- evaluations
+  mapM_ (print . flip restoreNames gamma) h                 -- print
 
 main :: IO ()
 main = do
