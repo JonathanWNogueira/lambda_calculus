@@ -1,7 +1,7 @@
 module DeBruijn where
 
 import Data.List ( elemIndex, (\\) )
-import Lambda ( LTerm ( evalStep ) )
+import Lambda ( LTerm ( betaReduction ) )
 import qualified Lambda as Lam ( Term ( Var, Abs, App ), freeVars )
 
 type Gamma = [Char]
@@ -50,4 +50,8 @@ subs (Var index) j s = if index == j then s else (Var index)                -- i
 subs (Abs t) j s = Abs $ subs t (j+1) (shift s 1 0)                         -- abstraction
 subs (App t1 t2) j s = App (subs t1 j s) (subs t2 j s)                      -- aplication
 
-betaReduction :: 
+instance LTerm Term where
+  betaReduction :: Term -> Term
+  betaReduction (App (Abs t) v) | isValue v = shift (subs t 0 (shift v 1 0)) (-1) 0        
+  betaReduction (App t1 t2) = let t = betaReduction t1 in App t t2        
+  betaReduction t = t                           
